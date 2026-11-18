@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d0d" />
+  <title>Hollow Signal — A Midnight Survival Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <a class="wordmark" href="#" aria-label="Hollow Signal home"><span class="brand-mark">H</span><span>HOLLOW<span class="wordmark-light">SIGNAL</span></span></a>
+      <div class="top-status"><span class="live-dot"></span><span id="status-text">SIGNAL LOST · 00:00</span></div>
+      <button class="sound-button" id="sound-button" aria-label="Toggle sound" title="Toggle sound"><span id="sound-icon">♪</span><span class="sound-label">SOUND ON</span></button>
+    </header>
+
+    <section class="intro-row">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-line"></span> A SURVIVAL HORROR GAME</p>
+        <h1>THE DARK IS <em>LISTENING.</em></h1>
+        <p class="subtitle">Find the signal. Stay out of sight. Make it to morning.</p>
+      </div>
+      <div class="chapter-note"><span class="chapter-icon">✳</span><span>BLACKROOT<br>RESEARCH WING</span></div>
+    </section>
+
+    <section class="game-layout" aria-label="Game">
+      <div class="play-column">
+        <div class="screen-frame">
+          <canvas id="game" width="960" height="600" aria-label="Hollow Signal game canvas"></canvas>
+          <div class="screen-vignette"></div>
+          <div class="overlay" id="start-overlay">
+            <div class="overlay-content start-content">
+              <div class="mini-label"><span class="mini-dot"></span> INCIDENT REPORT 07 — 02:13 AM</div>
+              <h2>Something woke<br>up <em>downstairs.</em></h2>
+              <p>The emergency relay is dead. Find the signal shards and reach the marked door — before it finds you.</p>
+              <button class="primary-button" id="start-button"><span>ENTER THE WING</span><span class="button-arrow">↗</span></button>
+              <div class="start-meta"><span>5 FLOORS</span><span class="meta-sep">/</span><span>NO WAY BACK</span></div>
+            </div>
+            <div class="overlay-side-note">KEEP YOUR LIGHT LOW<br>IT HEARS EVERYTHING</div>
+          </div>
+          <div class="overlay hidden" id="pause-overlay">
+            <div class="overlay-content compact-overlay"><span class="pause-symbol">Ⅱ</span><h2>PAUSED</h2><p>The silence feels different now.</p><button class="primary-button" id="resume-button"><span>BACK TO IT</span><span class="button-arrow">↗</span></button></div>
+          </div>
+          <div class="overlay hidden" id="end-overlay">
+            <div class="overlay-content compact-overlay"><span class="end-symbol" id="end-symbol">✳</span><p class="mini-label" id="end-kicker">SIGNAL RESTORED</p><h2 id="end-title">YOU MADE IT.</h2><p id="end-copy">The first light of dawn spills across the road.</p><button class="primary-button" id="restart-button"><span>PLAY AGAIN</span><span class="button-arrow">↗</span></button></div>
+          </div>
+          <div class="canvas-hint" id="canvas-hint"><span class="keycap">WASD</span> OR <span class="keycap">← ↑ ↓ →</span> TO MOVE <span class="hint-divider">·</span> <span class="keycap">ESC</span> PAUSE</div>
+        </div>
+        <div class="lower-bar"><span><span class="tiny-lamp"></span> BODY CAM <b>REC</b></span><span id="floor-label">FLOOR 01 / 05</span><span class="lower-right">YOU ARE NOT ALONE <span class="signal-bars"><i></i><i></i><i></i><i></i></span></span></div>
+        <div class="touch-controls" aria-label="Touch movement controls"><button data-dir="up" aria-label="Move up">▲</button><div><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move down">▼</button><button data-dir="right" aria-label="Move right">▶</button></div><span>MOVE</span></div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="panel objective-panel">
+          <div class="panel-heading"><span>YOUR OBJECTIVE</span><span class="panel-index">01</span></div>
+          <h3 id="objective-title">Restore the relay</h3>
+          <p id="objective-copy">Collect the signal shards. Find the exit.</p>
+          <div class="shard-row" id="shard-row" aria-label="Signal shards"><span class="shard empty"></span><span class="shard empty"></span><span class="shard empty"></span></div>
+          <div class="progress-copy"><span>SIGNAL STRENGTH</span><span id="signal-count">0 / 3</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+        <div class="panel stats-panel">
+          <div class="panel-heading"><span>VITALS</span><span class="panel-index">02</span></div>
+          <div class="lives-row"><span class="stat-label">LIVES LEFT</span><div class="hearts" id="hearts" aria-label="3 lives"><span>♥</span><span>♥</span><span>♥</span></div></div>
+          <div class="stat-divider"></div>
+          <div class="stat-pair"><span class="stat-label">FLOOR</span><strong id="floor-stat">01 <small>/ 05</small></strong></div>
+          <div class="stat-pair"><span class="stat-label">TIME IN DARK</span><strong class="mono" id="time-stat">00:00</strong></div>
+        </div>
+        <div class="panel map-panel">
+          <div class="panel-heading"><span>FIELD MAP</span><span class="map-live"><span></span> LIVE</span></div>
+          <div class="map-wrap"><canvas id="minimap" width="210" height="140" aria-label="Map of the current floor"></canvas><div class="map-overlay-label" id="map-label">AWAITING ENTRY</div></div>
+          <div class="map-legend"><span><i class="legend-you"></i> YOU</span><span><i class="legend-goal"></i> EXIT</span><span><i class="legend-threat"></i> THREAT</span></div>
+        </div>
+        <div class="tip-card"><span class="tip-mark">✳</span><p id="tip-text"><b>FIELD NOTE</b> The thing in the halls follows sound. Keep moving.</p></div>
+      </aside>
+    </section>
+
+    <footer class="footer"><span>HOLLOW SIGNAL <span class="footer-dim">© 1986 BLACKROOT FACILITY</span></span><span>AN EXPERIMENT IN SURVIVAL <span class="footer-dim">·</span> <span id="footer-floor">01</span>/05</span></footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
